@@ -1,0 +1,46 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      - TZ=Asia/Kolkata
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=magento
+      - MYSQL_USER=magento
+      - MYSQL_PASSWORD=magento
+    restart: always
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  magento:
+    image: abhijitwakchaure/magento:2.4.4
+    # build:
+    #   context: .
+    ports:
+      - '80:80'
+      - '443:8443'
+    restart: always
+    environment:
+      - TZ=Asia/Kolkata
+      - MAGENTO_HOST=http://127.0.0.1
+      - MAGENTO_DATABASE_HOST=mysql
+      - MAGENTO_DATABASE_PORT_NUMBER=3306
+      - MAGENTO_DATABASE_NAME=magento
+      - MAGENTO_DATABASE_USER=magento
+      - MAGENTO_DATABASE_PASSWORD=magento
+      - MAGENTO_ADMIN_PASSWORD=admin1234
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT_NUMBER=9200    
+    depends_on:
+      - mysql
+      - elasticsearch
+
+  elasticsearch:
+    image: elasticsearch:7.17.5
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - CLI_JAVA_OPTS=-Xms256m -Xmx256m
+
+volumes:
+  mysql-data:
