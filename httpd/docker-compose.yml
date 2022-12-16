@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+
+  httpd:
+    image: httpd
+    volumes:
+      - './www:/usr/local/apache2/htdocs/'
+    restart: always
+    networks: 
+      - net_httpd
+    ports: 
+      - 80:80
+
+networks:
+  net_httpd:
+    driver: bridge
