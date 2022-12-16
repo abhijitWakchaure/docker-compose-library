@@ -1,0 +1,30 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+    volumes:
+      - 'mongo-data:/data/db'
+    restart: always
+    networks: 
+      - net_mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    networks: 
+      - net_mongo
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+volumes:
+  mongo-data:
+networks:
+  net_mongo:
+    driver: bridge
